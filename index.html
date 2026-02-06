@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>💜</title>
 
-  <!-- 🔑 GitHub Pages fix -->
   <base href="./">
 
   <style>
@@ -58,6 +57,10 @@
       justify-content: center;
     }
 
+    #screen3 .overlay {
+      background: rgba(230, 190, 255, 0.6);
+    }
+
     .card {
       background: rgba(255, 255, 255, 0.95);
       padding: 2rem;
@@ -83,6 +86,7 @@
     h1 {
       margin-top: 0;
       font-size: 1.8rem;
+      min-height: 2.2rem;
     }
 
     p {
@@ -127,7 +131,7 @@
       bottom: -20px;
       font-size: 1.4rem;
       animation: floatUp 6s linear infinite;
-      opacity: 0.8;
+      opacity: 0.85;
       pointer-events: none;
     }
 
@@ -141,6 +145,13 @@
         opacity: 0;
       }
     }
+
+    .replay {
+      margin-top: 1rem;
+      background: transparent;
+      color: #7b4bb7;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 
@@ -150,7 +161,7 @@
   <div class="screen active" id="screen1">
     <div class="overlay">
       <div class="card">
-        <h1>Hi Bavi 💜</h1>
+        <h1 id="typeText"></h1>
         <p>
           Four months with you has been my favorite kind of chaos.<br>
           I love our laughs, our little moments, and how easy everything feels when I’m with you 💜
@@ -183,11 +194,27 @@
           I’m really happy it’s you.
         </p>
         <p>Happy Valentine’s, Bavi 💜</p>
+        <button class="replay" onclick="goToScreen(1)">Replay 💫</button>
       </div>
     </div>
   </div>
 
   <script>
+    /* ---------- Typing Effect ---------- */
+    const text = "Hi Bavi 💜";
+    let index = 0;
+    const speed = 90;
+
+    function typeEffect() {
+      if (index < text.length) {
+        document.getElementById("typeText").innerHTML += text.charAt(index);
+        index++;
+        setTimeout(typeEffect, speed);
+      }
+    }
+    typeEffect();
+
+    /* ---------- Screen Navigation ---------- */
     function goToScreen(num) {
       document.querySelectorAll('.screen').forEach(s =>
         s.classList.remove('active')
@@ -196,13 +223,24 @@
       const next = document.getElementById('screen' + num);
       next.classList.add('active');
 
+      if (navigator.vibrate) {
+        navigator.vibrate(40);
+      }
+
       if (num === 3) {
         startHearts();
       }
+
+      if (num === 1) {
+        document.getElementById("typeText").innerHTML = "";
+        index = 0;
+        typeEffect();
+      }
     }
 
+    /* ---------- Hearts ---------- */
     function startHearts() {
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 25; i++) {
         createHeart();
       }
     }
@@ -213,7 +251,6 @@
       heart.textContent = Math.random() > 0.5 ? '💜' : '🌷';
       heart.style.left = Math.random() * 100 + 'vw';
       heart.style.animationDuration = 4 + Math.random() * 3 + 's';
-
       document.body.appendChild(heart);
 
       setTimeout(() => heart.remove(), 7000);
