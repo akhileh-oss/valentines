@@ -10,21 +10,40 @@
       margin: 0;
       height: 100vh;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden;
     }
 
+    /* ---------- Screens ---------- */
+
     .screen {
-      display: none;
-      height: 100vh;
-      width: 100%;
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.9s ease;
       background-size: cover;
-      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .screen.active {
-      display: flex;
+      opacity: 1;
+      pointer-events: auto;
     }
+
+    #screen1 {
+      background-image: url('bg1.jpeg');
+      background-position: center 25%;
+    }
+
+    #screen3 {
+      background-image: url('final.jpeg');
+      background-position: center 18%;
+    }
+
+    /* ---------- Overlay & Card ---------- */
 
     .overlay {
       background: rgba(200, 170, 230, 0.55);
@@ -37,13 +56,25 @@
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.95);
       padding: 2rem;
-      border-radius: 22px;
+      border-radius: 24px;
       max-width: 320px;
       text-align: center;
       color: #3a235e;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+      animation: popIn 0.6s ease;
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.95);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     h1 {
@@ -65,26 +96,60 @@
       padding: 0.7rem 1.6rem;
       font-size: 1rem;
       cursor: pointer;
-      margin-top: 0.5rem;
+      margin-top: 0.6rem;
+      transition: transform 0.15s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
     }
 
     button:active {
-      transform: scale(0.96);
+      transform: scale(0.95);
+    }
+
+    /* ---------- Inline Image ---------- */
+
+    .inline-img {
+      width: 100%;
+      max-width: 240px;
+      border-radius: 18px;
+      margin-bottom: 1rem;
+    }
+
+    /* ---------- Floating Hearts ---------- */
+
+    .heart {
+      position: absolute;
+      bottom: -20px;
+      font-size: 1.4rem;
+      animation: floatUp 6s linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+      }
+      to {
+        transform: translateY(-120vh) scale(1.4);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Screen 1 -->
-  <div class="screen active" id="screen1"
-       style="background-image: url('bg1.jpg');">
+  <!-- SCREEN 1 -->
+  <div class="screen active" id="screen1">
     <div class="overlay">
       <div class="card">
         <h1>Hi Bavi 💜</h1>
         <p>
           Four months with you has been my favorite kind of chaos.<br>
-          I love our laughs, our little moments, and how easy everything feels.
+          I love our laughs, our little moments, and how easy everything feels when I’m with you 💜
         </p>
         <p><strong>Will you be my Valentine?</strong></p>
         <button onclick="goToScreen(2)">Yes 💜</button>
@@ -92,21 +157,20 @@
     </div>
   </div>
 
-  <!-- Screen 2 -->
-  <div class="screen" id="screen2"
-       style="background-image: url('bg2.jpg');">
+  <!-- SCREEN 2 -->
+  <div class="screen" id="screen2">
     <div class="overlay">
       <div class="card">
+        <img src="bg2.jpeg" class="inline-img" alt="cute selfie">
         <h1>Wait 😌</h1>
-        <p>Are you sure?</p>
+        <p>Are you sure? (sus)</p>
         <button onclick="goToScreen(3)">I’m sure 💜</button>
       </div>
     </div>
   </div>
 
-  <!-- Screen 3 -->
-  <div class="screen" id="screen3"
-       style="background-image: url('bg3.jpg');">
+  <!-- SCREEN 3 -->
+  <div class="screen" id="screen3">
     <div class="overlay">
       <div class="card">
         <h1>🌷💜</h1>
@@ -121,10 +185,33 @@
 
   <script>
     function goToScreen(num) {
-      document.querySelectorAll('.screen').forEach(screen => {
-        screen.classList.remove('active');
-      });
-      document.getElementById('screen' + num).classList.add('active');
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const next = document.getElementById('screen' + num);
+      next.classList.add('active');
+
+      if (num === 3) {
+        startHearts();
+      }
+    }
+
+    function startHearts() {
+      for (let i = 0; i < 20; i++) {
+        createHeart();
+      }
+    }
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.innerText = Math.random() > 0.5 ? '💜' : '🌷';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = 4 + Math.random() * 3 + 's';
+
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 7000);
     }
   </script>
 
