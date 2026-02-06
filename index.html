@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>💜</title>
 
+  <!-- 🔑 GitHub Pages fix -->
+  <base href="./">
+
   <style>
     body {
       margin: 0;
@@ -34,12 +37,12 @@
     }
 
     #screen1 {
-      background-image: url('bg1.jpeg');
+      background-image: url('./bg1.jpeg');
       background-position: center 25%;
     }
 
     #screen3 {
-      background-image: url('final.jpeg');
+      background-image: url('./final.jpeg');
       background-position: center 18%;
     }
 
@@ -125,6 +128,7 @@
       font-size: 1.4rem;
       animation: floatUp 6s linear infinite;
       opacity: 0.8;
+      pointer-events: none;
     }
 
     @keyframes floatUp {
@@ -161,7 +165,7 @@
   <div class="screen" id="screen2">
     <div class="overlay">
       <div class="card">
-        <img src="bg2.jpeg" class="inline-img" alt="cute selfie">
+        <img src="./bg2.jpeg" class="inline-img" alt="cute selfie">
         <h1>Wait 😌</h1>
         <p>Are you sure? (sus)</p>
         <button onclick="goToScreen(3)">I’m sure 💜</button>
@@ -185,7 +189,10 @@
 
   <script>
     function goToScreen(num) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.screen').forEach(s =>
+        s.classList.remove('active')
+      );
+
       const next = document.getElementById('screen' + num);
       next.classList.add('active');
 
@@ -202,16 +209,14 @@
 
     function createHeart() {
       const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.innerText = Math.random() > 0.5 ? '💜' : '🌷';
+      heart.className = 'heart';
+      heart.textContent = Math.random() > 0.5 ? '💜' : '🌷';
       heart.style.left = Math.random() * 100 + 'vw';
       heart.style.animationDuration = 4 + Math.random() * 3 + 's';
 
       document.body.appendChild(heart);
 
-      setTimeout(() => {
-        heart.remove();
-      }, 7000);
+      setTimeout(() => heart.remove(), 7000);
     }
   </script>
 
